@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "850542807577",
+    "firebase_url": "https://rayhanasprilla-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "rayhanasprilla",
+    "storage_bucket": "rayhanasprilla.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850542807577:android:b41cb9c095ecfb4a1c7888",
+        "android_client_info": {
+          "package_name": "com.sunintech.metweet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850542807577-v3paopf0ska0p693tes82jdrkkcohv42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh1hS1_Hhbxko0KzW3F-2215q91somuRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850542807577-v3paopf0ska0p693tes82jdrkkcohv42.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
