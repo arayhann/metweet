@@ -1,16 +1,16 @@
 # metweet
 
-A new Flutter application.
+1-Person Twitter App 
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a made for glints technical submission.
 
-A few resources to get you started if this is your first Flutter project:
+You can create a new account or just login with this available account:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+email: test@test.com
+password: testtest
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+You can see the user flow below:
+
+![image](https://i.ibb.co/QKsJXtx/Frame-2.png)
