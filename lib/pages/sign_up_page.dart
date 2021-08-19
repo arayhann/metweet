@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:metweet/components/custom_button/fill_button.dart';
 import 'package:metweet/components/custom_field/bordered_text_field.dart';
 import 'package:metweet/components/pop_app_bar.dart';
+import 'package:metweet/pages/sign_in_page.dart';
 import 'package:metweet/providers/auth.dart';
 import 'package:metweet/utils/http_exception.dart';
 import 'package:metweet/utils/page_transition_builder.dart';
@@ -187,6 +189,11 @@ class SignUpPage extends HookConsumerWidget {
                                 color: primaryColor,
                                 fontWeight: FontWeight.w600,
                               ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.of(context)
+                                      .push(createRoute(page: SignInPage()));
+                                },
                             ),
                           ],
                           style: TextStyle(
