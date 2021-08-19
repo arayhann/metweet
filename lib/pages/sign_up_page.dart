@@ -7,7 +7,10 @@ import 'package:metweet/components/custom_field/bordered_text_field.dart';
 import 'package:metweet/components/pop_app_bar.dart';
 import 'package:metweet/providers/auth.dart';
 import 'package:metweet/utils/http_exception.dart';
+import 'package:metweet/utils/page_transition_builder.dart';
 import 'package:metweet/utils/themes.dart';
+
+import 'home_page.dart';
 
 class SignUpPage extends HookConsumerWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -41,6 +44,9 @@ class SignUpPage extends HookConsumerWidget {
                       _authData.value['email']!,
                       _authData.value['password']!,
                     );
+
+                Navigator.of(context).pushAndRemoveUntil(
+                    createRoute(page: HomePage()), (route) => false);
               } on HttpException catch (error) {
                 var errorMessage =
                     'Authenticate failed. Please try again later.';

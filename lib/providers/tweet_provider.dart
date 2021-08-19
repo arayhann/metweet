@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:metweet/providers/auth.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,15 +23,17 @@ class Tweet {
 }
 
 final tweetProvider = StateNotifierProvider<TweetNotifier, List<Tweet>>((ref) {
-  return TweetNotifier();
+  return TweetNotifier(authData: ref.watch(authProvider));
 });
 
 class TweetNotifier extends StateNotifier<List<Tweet>> {
-  TweetNotifier() : super([]);
+  TweetNotifier({required this.authData}) : super([]);
+
+  final AuthData authData;
 
   Future<void> createTweet(String tweet) async {
-    const url =
-        'https://rayhanasprilla-default-rtdb.asia-southeast1.firebasedatabase.app/tweets.json';
+    final url =
+        'https://rayhanasprilla-default-rtdb.asia-southeast1.firebasedatabase.app/tweets.json?auth=${authData.token}';
 
     try {
       final response = await http.post(
@@ -48,8 +51,8 @@ class TweetNotifier extends StateNotifier<List<Tweet>> {
   }
 
   Future<void> getTweets() async {
-    const url =
-        'https://rayhanasprilla-default-rtdb.asia-southeast1.firebasedatabase.app/tweets.json';
+    final url =
+        'https://rayhanasprilla-default-rtdb.asia-southeast1.firebasedatabase.app/tweets.json?auth=${authData.token}';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -67,6 +70,8 @@ class TweetNotifier extends StateNotifier<List<Tweet>> {
           ),
         );
       });
+
+      loadedData.sort((a, b) => b.serverTimestamp.compareTo(a.serverTimestamp));
 
       state = loadedData;
     } catch (error) {
