@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-This project is a made for glints technical submission.
+This project is made for glints technical submission.
 
 You can create a new account or just login with this available account:
 
