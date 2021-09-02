@@ -8,6 +8,7 @@ import 'package:metweet/components/custom_button/bordered_button.dart';
 import 'package:metweet/components/custom_button/fill_button.dart';
 import 'package:metweet/components/custom_field/bordered_text_field.dart';
 import 'package:metweet/components/tweet_history.dart';
+import 'package:metweet/components/tweet_post.dart';
 import 'package:metweet/main.dart';
 import 'package:metweet/pages/on_boarding_page.dart';
 import 'package:metweet/providers/auth.dart';
@@ -20,10 +21,6 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _tweetTextEditingController = useTextEditingController();
-    final _tweetCount = useState(0);
-    final _isLoading = useState(false);
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -186,83 +183,7 @@ class HomePage extends HookConsumerWidget {
                 const SizedBox(
                   height: 24,
                 ),
-                Text(
-                  'Create Tweet',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(
-                  height: 6,
-                ),
-                Text(
-                  'Start tweeting your self',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                BorderedFormField(
-                  hint: 'Tweet',
-                  maxLine: 5,
-                  textEditingController: _tweetTextEditingController,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(280),
-                  ],
-                  onChanged: (value) {
-                    _tweetCount.value = value.length;
-                  },
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    '${_tweetCount.value} / 280 character',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                _isLoading.value
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : FillButton(
-                        text: 'Tweet!',
-                        leading: Icon(
-                          Icons.add_box_outlined,
-                          color: Colors.white,
-                        ),
-                        onTap: () async {
-                          final tweet = _tweetTextEditingController.text;
-
-                          if (tweet.isEmpty) {
-                            return;
-                          }
-                          _isLoading.value = true;
-                          await ref
-                              .read(tweetProvider.notifier)
-                              .createTweet(tweet);
-                          _isLoading.value = false;
-                        },
-                      ),
+                TweetPost(),
                 const SizedBox(
                   height: 40,
                 ),

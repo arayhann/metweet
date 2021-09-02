@@ -1,30 +1,19 @@
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:metweet/providers/auth.dart';
+import 'package:metweet/pages/edit_tweet_page.dart';
 import 'package:metweet/providers/tweet_dao.dart';
 import 'package:metweet/providers/tweet_provider.dart';
+import 'package:metweet/utils/page_transition_builder.dart';
 
-class TweetHistory extends HookConsumerWidget {
+class TweetHistory extends HookWidget {
   const TweetHistory({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final _isLoadingGet = useState(true);
-    final _listTweet = useState<List<Tweet>>([]);
-
+  Widget build(BuildContext context) {
     final _tweetDao = useState(TweetDao());
-
-    // useEffect(() {
-    //   ref.read(tweetProvider.notifier).getTweets().then((_) {
-    //     _isLoadingGet.value = false;
-    //     _listTweet.value = ref.read(tweetProvider);
-    //   });
-    //
-    //   return;
-    // }, []);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,60 +44,91 @@ class TweetHistory extends HookConsumerWidget {
         const SizedBox(
           height: 12,
         ),
-        FirebaseAnimatedList(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          query: _tweetDao.value.getTweetQuery(),
-          reverse: true,
-          itemBuilder: (context, snapshot, animation, index) {
-            final json = snapshot.value as Map<dynamic, dynamic>;
-
-            return Container(
-              decoration: BoxDecoration(
-                color: Color(0x20C4C4C4),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.symmetric(vertical: 6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${DateFormat('dd MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(json['server_timestamp']))}',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.white,
-                    ),
+        StreamBuilder(
+          stream: _tweetDao.value.getTweetQuery().onValue,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Column(
+                children: <Widget>[
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
                   ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Text(
-                    json['tweet'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('Error: ${snapshot.error}'),
                   ),
                 ],
-              ),
-            );
+              );
+            } else {
+              if (snapshot.connectionState == ConnectionState.active) {
+                final json = (snapshot.data as Event).snapshot.value['tweets'];
+                final List<Tweet> loadedData = [];
+
+                json.forEach((key, value) {
+                  loadedData.add(
+                    Tweet(
+                      id: key,
+                      serverTimestamp: value['server_timestamp'],
+                      tweet: value['tweet'],
+                    ),
+                  );
+                });
+
+                loadedData.sort(
+                    (a, b) => b.serverTimestamp.compareTo(a.serverTimestamp));
+
+                return ListView.builder(
+                  itemCount: loadedData.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          createRoute(page: EditTweetPage(loadedData[index])));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0x20C4C4C4),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${DateFormat('dd MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(loadedData[index].serverTimestamp))}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          Text(
+                            loadedData[index].tweet,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }
           },
         ),
-        // _isLoadingGet.value
-        //     ? Center(
-        //         child: CircularProgressIndicator(),
-        //       )
-        //     : ListView.separated(
-        //         shrinkWrap: true,
-        //         physics: NeverScrollableScrollPhysics(),
-        //         itemCount: _listTweet.value.length,
-        //         itemBuilder: (context, index) => ,
-        //         separatorBuilder: (context, index) => const SizedBox(
-        //           height: 12,
-        //         ),
-        //       ),
       ],
     );
   }
