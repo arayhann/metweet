@@ -18,6 +18,7 @@ class TweetPost extends HookConsumerWidget {
     final _tweetCount = useState(0);
     final _isLoading = useState(false);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Create Tweet',
@@ -93,6 +94,8 @@ class TweetPost extends HookConsumerWidget {
 
                   try {
                     await ref.read(tweetProvider.notifier).createTweet(tweet);
+
+                    Navigator.of(context).pop();
                   } on HttpException catch (error) {
                     Fluttertoast.showToast(msg: error.toString());
                   } catch (error) {

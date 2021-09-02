@@ -1,18 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:metweet/components/custom_button/bordered_button.dart';
 import 'package:metweet/components/custom_button/fill_button.dart';
-import 'package:metweet/components/custom_field/bordered_text_field.dart';
 import 'package:metweet/components/tweet_history.dart';
-import 'package:metweet/components/tweet_post.dart';
 import 'package:metweet/main.dart';
-import 'package:metweet/pages/on_boarding_page.dart';
+import 'package:metweet/pages/add_tweet_page.dart';
 import 'package:metweet/providers/auth.dart';
-import 'package:metweet/providers/tweet_provider.dart';
 import 'package:metweet/utils/page_transition_builder.dart';
 import 'package:metweet/utils/themes.dart';
 
@@ -183,9 +177,84 @@ class HomePage extends HookConsumerWidget {
                 const SizedBox(
                   height: 24,
                 ),
-                TweetPost(),
+                Text(
+                  'Create Tweet',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(
-                  height: 40,
+                  height: 6,
+                ),
+                Text(
+                  'Start tweeting your self',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Color(0x20C4C4C4),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 200,
+                      ),
+                      Positioned(
+                        top: -40,
+                        left: 10,
+                        child: Image.asset(
+                          'assets/images/img-login.png',
+                          width: 300,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 16,
+                        right: 20,
+                        left: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Let's Start Twittin' Now!",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 40,
+                              width: 80,
+                              child: FillButton(
+                                text: 'Create Tweet!',
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .push(createRoute(page: AddTweetPage()));
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
                 ),
                 TweetHistory(),
               ],

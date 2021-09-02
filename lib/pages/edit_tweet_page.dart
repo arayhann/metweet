@@ -117,9 +117,7 @@ class EditTweetPage extends HookConsumerWidget {
                       height: 20,
                     ),
                     _isLoading.value
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
+                        ? SizedBox.shrink()
                         : FillButton(
                             text: 'Delete Tweet',
                             color: Colors.red,
