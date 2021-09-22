@@ -256,7 +256,7 @@ class HomePage extends HookConsumerWidget {
                 const SizedBox(
                   height: 30,
                 ),
-                TweetHistory(),
+                TweetHistory(ref.read(authProvider).userId!),
               ],
             ),
           ),

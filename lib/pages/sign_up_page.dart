@@ -8,6 +8,7 @@ import 'package:metweet/components/custom_field/bordered_text_field.dart';
 import 'package:metweet/components/pop_app_bar.dart';
 import 'package:metweet/pages/sign_in_page.dart';
 import 'package:metweet/providers/auth.dart';
+import 'package:metweet/utils/field_validator.dart';
 import 'package:metweet/utils/http_exception.dart';
 import 'package:metweet/utils/page_transition_builder.dart';
 import 'package:metweet/utils/themes.dart';
@@ -50,19 +51,7 @@ class SignUpPage extends HookConsumerWidget {
                 Navigator.of(context).pushAndRemoveUntil(
                     createRoute(page: HomePage()), (route) => false);
               } on HttpException catch (error) {
-                var errorMessage =
-                    'Authenticate failed. Please try again later.';
-                if (error.toString().contains('EMAIL_EXISTS')) {
-                  errorMessage = 'This email address is already in use.';
-                } else if (error.toString().contains('INVALID_EMAIL')) {
-                  errorMessage = 'This is not a valid email address.';
-                } else if (error.toString().contains('WEAK_PASSWORD')) {
-                  errorMessage = 'This password is too weak.';
-                } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-                  errorMessage = 'Could not found a user with that email';
-                } else if (error.toString().contains('INVALID_PASSWORD')) {
-                  errorMessage = 'Invalid password.';
-                }
+                var errorMessage = HttpException.getAuthError(error.toString());
                 Fluttertoast.showToast(msg: errorMessage);
               } catch (error) {
                 const errorMessage =
@@ -103,16 +92,7 @@ class SignUpPage extends HookConsumerWidget {
                         hint: 'Email',
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Invalid email!';
-                          }
-                          if (value.isEmpty || !value.contains('@')) {
-                            return 'Invalid email!';
-                          }
-
-                          return null;
-                        },
+                        validator: FieldValidator.validateEmail,
                         onSaved: (value) {
                           if (value != null) {
                             _authData.value['email'] = value;
@@ -132,16 +112,7 @@ class SignUpPage extends HookConsumerWidget {
                         focusNode: _passwordFocusNode,
                         textInputAction: TextInputAction.next,
                         textEditingController: _passwordTextEditingController,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Invalid email!';
-                          }
-                          if (value.isEmpty || value.length < 5) {
-                            return 'Password is too short!';
-                          }
-
-                          return null;
-                        },
+                        validator: FieldValidator.validatePassword,
                         onSaved: (value) {
                           if (value != null) {
                             _authData.value['password'] = value;
@@ -160,10 +131,9 @@ class SignUpPage extends HookConsumerWidget {
                         maxLine: 1,
                         focusNode: _repeatPasswordFocusNode,
                         validator: (value) {
-                          if (value != _passwordTextEditingController.text) {
-                            return 'Passwords do not match!';
-                          }
-                          return null;
+                          FieldValidator.validatePassword(value,
+                              matchPassword:
+                                  _passwordTextEditingController.text);
                         },
                       ),
                       const SizedBox(
