@@ -1,12 +1,10 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:metweet/models/tweet.dart';
 import 'package:metweet/pages/edit_tweet_page.dart';
 import 'package:metweet/providers/tweet_dao.dart';
-import 'package:metweet/providers/tweet_provider.dart';
 import 'package:metweet/utils/page_transition_builder.dart';
 
 class TweetHistory extends HookWidget {
